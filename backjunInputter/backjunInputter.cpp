@@ -24,6 +24,7 @@ int main()
 	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	saAttr.bInheritHandle = TRUE;
 	saAttr.lpSecurityDescriptor = NULL;
+	
 
 
 	HANDLE hChildStd_OUT_Rd;
@@ -103,7 +104,13 @@ int main()
 	char testStr[] = "아버지가 송신";
 	DWORD dwWrittend;
 	BOOL bWriteSuc;
+	/// =====================================================================================================
 
+	/// 입력 포멧 마지막 구분자는 \n으로 마무리한다.
+	// 입력 버퍼의 길이는 \n까지만 센다
+	// 그이상으로 입력하면 \n이후의 문자열도 입력으로 본다.
+	// 그 이후 동작은 잘 모르겠다. 잘안된다. \n을 꼭 지키자.
+	///=====================================================================================================
 	string line;
 	ifstream myfile(path + "1931.txt");
 	if (myfile.is_open())
@@ -116,42 +123,38 @@ int main()
 		while (getline(myfile, line))
 		{
 			ZeroMemory(buff, 1024);
-			
-			strcpy_s(buff, line.size()+1, line.c_str());
+			line += "\n";
+			strcpy_s(buff, strlen(line.c_str())+1, line.c_str());
 			if (iInputCnt > 0)
 			{
 				char* tok;
-				tok = strtok_s(buff, " ",&next_Token);
+				tok = strtok_s(buff, " ", &next_Token);
 				while (tok)
 				{
 
 					int idx = 0;
 
-					while (tok[idx++] != '\0');
-					
+					while (tok[idx] != '\0') 
+					{
+						idx++;
+					}
+
 					char inputBuff[1024];
 					ZeroMemory(inputBuff, 1024);
-					strcpy_s(inputBuff, idx , tok);
-					inputBuff[idx + 1] = '\n';
-						idx++;
-					cout << "input" << tok << endl;
-					bWriteSuc = WriteFile(hChildStd_IN_Wr, inputBuff, idx+1, &dwWrittend, NULL);
-
-					
-					tok= strtok_s(NULL, " ",&next_Token);
+					strcpy_s(inputBuff, idx + 1, tok);
+					inputBuff[idx] = '\n';
+					idx++;
+					cout << "input : " << tok  << "   ";
+					bWriteSuc = WriteFile(hChildStd_IN_Wr, inputBuff, idx, &dwWrittend, NULL);
+					tok = strtok_s(NULL, " ", &next_Token);
 
 				}
-			
 				continue;
 
 			}
 			
-			
 
-
-			line += "\n";
-
-			bWriteSuc = WriteFile(hChildStd_IN_Wr, buff, line.size()+1, &dwWrittend, NULL);
+			bWriteSuc = WriteFile(hChildStd_IN_Wr, buff, line.length(), &dwWrittend, NULL);
 			cout << buff << endl;
 			if (bWriteSuc == FALSE)
 			{
@@ -175,7 +178,6 @@ int main()
 
 	cout << "ends" << endl;
 	int wait;
-	cin >> wait;
 	CloseHandle(hChildStd_OUT_Rd);
 	CloseHandle(hChildStd_OUT_Wr);
 	CloseHandle(hChildStd_IN_Rd);

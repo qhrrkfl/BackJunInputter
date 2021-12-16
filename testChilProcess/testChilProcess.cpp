@@ -25,14 +25,15 @@ int main()
 	vector<time> vT;
 	for (int i = 0; i < input; i++)
 	{
-		string str , str2;
+		int str , str2;
 		cin >> str;
 		cout << str << endl;
 		cin >> str2;
 		cout << str2 << endl;
 	}
 	int wait;
-		cin >> wait;
+	
+	Sleep(4000);
 
 }
 
