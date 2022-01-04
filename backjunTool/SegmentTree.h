@@ -5,6 +5,7 @@
 // 업데이트는 lazy propagation 
 class SegmentTree : public CompleteTree
 {
+	int baseArrNum;
 	int buildRec(const int arr[], int node, int nodeleft, int nodeRight);
 	int merge(int left, int right);
 	int QueryRec(int left, int right, int node, int nodeLeft, int nodeRight);

@@ -25,6 +25,7 @@ SegmentTree::SegmentTree(int arr[], int len)
 	// 2*N < arrsize < 4*N ·Î Á¤ÇØÁü.
 	arrLen = len * 4;
 	data = new int[arrLen];
+	baseArrNum = len;
 	for (int i = 0; i < arrLen; i++)
 	{
 		data[i] = 0;
@@ -41,12 +42,12 @@ SegmentTree::~SegmentTree()
 
 int SegmentTree::query(int left, int right)
 {
-	return QueryRec(left, right, 1, 0, arrLen - 1);
+	return QueryRec(left, right, 1, 0, baseArrNum - 1);
 }
 
 int SegmentTree::update(int index, int newValue)
 {
-	return updateRec(index, newValue, 1, 0, arrLen - 1);
+	return updateRec(index, newValue, 1, 0, baseArrNum - 1);
 }
 
 int SegmentTree::QueryRec(int left, int right, int node, int nodeLeft, int nodeRight)

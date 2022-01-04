@@ -13,7 +13,6 @@ CompleteTree::CompleteTree(int data[], int arrSize)
 
 CompleteTree::~CompleteTree()
 {
-	cout << "base" << endl;
 	delete[] data;
 }
 
